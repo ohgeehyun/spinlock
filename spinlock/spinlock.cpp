@@ -2,7 +2,7 @@
 //
 
 /*
-    싱글코어 환경에서 스핀락을 사용하는것은 의미가없다. 결국cpu코어를 사용하여 락을 기다리기 때문이다.
+    싱글코어 환경에서 스핀락을 사용하는것은 의미가없다. 결국cpu코어를 사용(반복문)하여 락을 기다리기 때문이다.
     but 듀얼 코어환경에서는 컨텍스트 스위칭보다 cpu자원을 사용하는것이 좋은 환경일때는 뮤텍스 보다 좋은 선택이 될 수도 있다.
     현대 운영체제에서는 하이브리드 뮤텍스가 결국 처음에는 락을돌리다 일정시간 지나면 그제서야 스레드를 대기상태로 만들기는한다.
     결국 왠만해서는 뮤텍스를 사용하는게 맞지만 그래도 어떻게 돌아가는지 공부하자.
@@ -16,7 +16,7 @@ std::atomic<bool> lock(false); // 원자성을 보장 이 데이터를 사용하
 
 void critical_section(int id) {
     
-    while (lock.exchange(true, std::memory_order_acquire)) { // 락을 흭득할떄 메모리 가시성을 보장
+    while (lock.exchange(true, std::memory_order_acquire)) { // 해당 명령 뒤에 오는 모든 메모리 명령들이 해당 명령 위로 재배치되는 것을 금지
         // Spin while the lock is held by another thread
     }
 
